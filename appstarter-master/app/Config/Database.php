@@ -25,17 +25,17 @@ class Database extends Config
      * @var array<string, mixed>
      */
     public array $default = [
-        'DSN'          => '127.0.0.1',
+        'DSN'          => '',
         'hostname'     => 'localhost',
-        'username'     => 'root',
-        'password'     => 'null',
-        'database'     => 'tp3',
+        'username'     => '',
+        'password'     => '',
+        'database'     => '',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,
         'DBDebug'      => true,
-        'charset'      => 'utf8',
-        'DBCollat'     => 'utf8_general_ci',
+        'charset'      => 'utf8mb4',
+        'DBCollat'     => 'utf8mb4_general_ci',
         'swapPre'      => '',
         'encrypt'      => false,
         'compress'     => false,

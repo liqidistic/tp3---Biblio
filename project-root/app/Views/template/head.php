@@ -6,6 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Bibliothèque</title>
+    <?php if (isset($loggedIn) && $loggedIn == true) : ?>
+        <span>Bonjour, <?= esc($name) ?></span>
+    <?php endif ?>
     
     <!-- Styles CSS -->
     <link rel="stylesheet" href="assets/styles.css">
@@ -44,12 +47,12 @@
             font-weight: bold;
             display: block;
             margin: 10px 0 5px;
-            text-align: left;
+            text-align: center;
         }
 
         /* Style des champs */
         input {
-            width: 100%;
+            width: 90%;
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
