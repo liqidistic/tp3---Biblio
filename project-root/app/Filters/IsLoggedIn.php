@@ -14,7 +14,7 @@ class IsLoggedIn implements FilterInterface
         
         if (!$session->get('loggedIn')) {
            
-            return redirect()->to(site_url('login'));
+            return redirect()->to(site_url(''));
         }
 
         

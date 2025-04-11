@@ -17,6 +17,7 @@ class Connection extends BaseController
         if (!empty($values) && $values['login'] == APP_ADMIN_LOGIN && $values['password'] == APP_ADMIN_PASSWORD) {
             session()->set('is_admin', true); 
             return redirect()->to('/admin');
+            
        } 
         
        $userFetched = $abonneModel->where('matricule_abonne',$this->request->getPost('login'))->first();
@@ -25,7 +26,7 @@ class Connection extends BaseController
        ) {
        $array = array('loggedIn' => true);
        $this->session->set($array);
-       return redirect();
+       return redirect()->to('/user/userdashboard');
        } else {
         return "Login KO";
        }

@@ -1,4 +1,5 @@
-<?php require_once("template/head.php"); ?>
+<?= $this->extend('template/head') ?>
+<?= $this->section('content') ?>
 
 <body>
     <div class="container">
@@ -16,4 +17,4 @@
 </body>
 </html>
 
-<?php require_once("template/footer.php"); ?>
+<?= $this->endSection() ?>

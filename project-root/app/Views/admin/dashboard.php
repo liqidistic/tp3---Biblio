@@ -32,16 +32,16 @@
         }
         .container {
             display: flex;
-            flex-wrap: nowrap; /* Prevent wrapping to keep all cards in one row */
+            flex-wrap: nowrap; 
             gap: 20px;
             padding: 20px;
             justify-content: center;
-            max-width: 100%; /* Ensure it fits within the viewport */
+            max-width: 100%; 
         }
         .card {
             background-color: white;
             padding: 20px;
-            width: 300px; /* Fixed width for consistency */
+            width: 300px; 
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
@@ -49,7 +49,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            flex: 0 0 auto; /* Prevent cards from stretching */
+            flex: 0 0 auto; 
             box-sizing: border-box;
         }
         .card i {
@@ -77,16 +77,16 @@
         .card button:hover {
             background-color: #45a049;
         }
-        /* Optional: Responsive adjustment for smaller screens */
+        
         @media (max-width: 1000px) {
             .container {
-                flex-wrap: wrap; /* Allow wrapping on smaller screens */
+                flex-wrap: wrap; 
             }
         }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
+   
     <div class="navbar">
         <a href="<?= base_url('admin/dashboard') ?>">Tableau de Bord</a>
         <a href="<?= base_url('admin/livres') ?>">Livres</a>
@@ -94,7 +94,7 @@
         <a href="<?= base_url('admin/abonnes') ?>">Abonnés</a>
     </div>
 
-    <!-- Tableau de Bord -->
+   
     <div class="container">
         <div class="card">
             <i class="fas fa-book"></i>

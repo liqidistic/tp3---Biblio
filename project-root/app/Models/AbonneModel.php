@@ -23,5 +23,8 @@ class AbonneModel extends Model
     protected bool $allowEmptyInsert = false;
     protected bool $updateOnlyChanged = true;
 
-
+public function getAbonneByMatricule($matricule)
+    {
+        return $this->where('matricule', $matricule)->first();
+    }
 }

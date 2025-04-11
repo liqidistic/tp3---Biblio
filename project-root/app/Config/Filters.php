@@ -13,7 +13,7 @@ use CodeIgniter\Filters\PageCache;
 use CodeIgniter\Filters\PerformanceMetrics;
 use CodeIgniter\Filters\SecureHeaders;
 
-use App\Filters\IsLoggedIn;
+use \App\Filters\IsLoggedIn;
 
 class Filters extends BaseFilters
 {

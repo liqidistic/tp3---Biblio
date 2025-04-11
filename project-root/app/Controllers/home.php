@@ -8,11 +8,11 @@ class Home extends BaseController
     {
         $session = session();
         $template =
-            view('template/header', [
+            view('template/head', [
                 'loggedIn' => $session->get('loggedIn'),
                 'name' => $session->get('username')
             ]) .
-            view('templates/footer');
+            view('template/footer');
         return "Bienvenue sur la page d'accueil !";
     }
 }
