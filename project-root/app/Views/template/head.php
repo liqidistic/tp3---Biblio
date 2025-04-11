@@ -14,7 +14,6 @@
     <!-- Styles CSS -->
     <link rel="stylesheet" href="assets/styles.css">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-
     <style>
         /* Style global */
         body {
@@ -75,4 +74,8 @@
             background-color: #0056b3;
         }
     </style>
+    
+    <?= $this->rendersection('content') ?>
+    <?= $this->include('template/footer') ?>
 </head>
+

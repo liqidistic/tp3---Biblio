@@ -6,20 +6,23 @@ use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 
-
-class AuthenticatedFilter implements FilterInterface
+class IsLoggedIn implements FilterInterface
 {
     public function before(RequestInterface $request, $args = null)
     {
-        $session = session();
-        if ($session->has('loggedIn')&& $session->get('loggedin') == true) {
-            return $request;
-        } else {
-            return redirect()->to('login');
+        $session = session(); 
+        
+        if (!$session->get('loggedIn')) {
+           
+            return redirect()->to(site_url('login'));
         }
+
+        
+        return $request;
     }
 
     public function after(RequestInterface $request, ResponseInterface $response, $args = null)
     {
+        
     }
 }

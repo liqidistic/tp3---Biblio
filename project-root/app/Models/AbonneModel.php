@@ -20,8 +20,8 @@ class AbonneModel extends Model
     'CSP_abonne'
     ];
 
-    public function getAbonneByMatricule($matricule)
-    {
-        return $this->where('matricule_abonne', $matricule)->first();
-    }
+    protected bool $allowEmptyInsert = false;
+    protected bool $updateOnlyChanged = true;
+
+
 }

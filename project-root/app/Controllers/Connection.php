@@ -21,13 +21,16 @@ class Connection extends BaseController
         
        $userFetched = $abonneModel->where('matricule_abonne',$this->request->getPost('login'))->first();
 
-       if($this->request->getPost('password') == $userFetched['nom_abonne']) {
-        return "Login OK";
+       if($this->request->getPost('password') == $userFetched['nom_abonne']
+       ) {
+       $array = array('loggedIn' => true);
+       $this->session->set($array);
+       return redirect();
        } else {
         return "Login KO";
        }
         }
-    
+
     public function logout()
 {
     session()->destroy();

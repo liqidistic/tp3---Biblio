@@ -117,14 +117,5 @@ class Admin extends BaseController
 
         return view('admin/abonne_detail', ['abonne' => $abonne]);
     }
-
-
-    public function logout() {
-        // Détruire la session
-        $this->session->sess_destroy();
-
-        // Rediriger l'utilisateur vers la page d'accueil
-        redirect('/home');
-    }
+    
 }
-
