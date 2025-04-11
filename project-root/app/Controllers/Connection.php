@@ -26,15 +26,9 @@ class Connection extends BaseController
        ) {
        $array = array('loggedIn' => true);
        $this->session->set($array);
-       return redirect()->to('/user/userdashboard');
+       return redirect()->to('/user');
        } else {
         return "Login KO";
        }
         }
-
-    public function logout()
-{
-    session()->destroy();
-    return redirect()->to('/login');
-}
 }
