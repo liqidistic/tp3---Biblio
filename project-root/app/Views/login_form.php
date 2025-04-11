@@ -1,6 +1,6 @@
 <?= $this->extend('template/head') ?>
 <?= $this->section('content') ?>
-
+<!-- blabla -->
 <body>
     <div class="container">
         <h1>Se connecter</h1>
