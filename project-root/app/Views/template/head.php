@@ -9,6 +9,7 @@
     <?php if (isset($loggedIn) && $loggedIn == true) : ?>
         <span>Bonjour, <?= esc($name) ?></span>
     <?php endif ?>
+
     
     <!-- Styles CSS -->
     <link rel="stylesheet" href="assets/styles.css">
