@@ -7,83 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tableau de Bord Administrateur</title>
-    <link rel="stylesheet" href="">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        .navbar {
-            background-color: #333;
-            color: white;
-            padding: 10px;
-            text-align: center;
-        }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            padding: 14px 20px;
-            margin: 0 10px;
-        }
-        .navbar a:hover {
-            background-color: #575757;
-        }
-        .container {
-            display: flex;
-            flex-wrap: nowrap; 
-            gap: 20px;
-            padding: 20px;
-            justify-content: center;
-            max-width: 100%; 
-        }
-        .card {
-            background-color: white;
-            padding: 20px;
-            width: 300px; 
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            flex: 0 0 auto; 
-            box-sizing: border-box;
-        }
-        .card i {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-        .card h3 {
-            margin: 10px 0;
-        }
-        .card p {
-            font-size: 16px;
-            color: #555;
-        }
-        .card button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            border-radius: 4px;
-            margin-top: 10px;
-            width: 100%;
-            transition: background-color 0.3s;
-        }
-        .card button:hover {
-            background-color: #45a049;
-        }
-        
-        @media (max-width: 1000px) {
-            .container {
-                flex-wrap: wrap; 
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
+
 </head>
 <body>
    

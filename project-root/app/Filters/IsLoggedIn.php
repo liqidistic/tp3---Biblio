@@ -23,6 +23,6 @@ class IsLoggedIn implements FilterInterface
 
     public function after(RequestInterface $request, ResponseInterface $response, $args = null)
     {
-        
+        return $response;
     }
 }

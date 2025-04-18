@@ -2,6 +2,7 @@
 <?= $this->section('content') ?>
 
 <body>
+    </div>
     <div class="container">
         <h1>Se connecter</h1>
         <form method="POST" action="/login">
