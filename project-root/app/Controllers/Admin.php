@@ -18,7 +18,7 @@ class Admin extends BaseController
     {
         $livreModel = new \App\Models\LivreModel();
         $data['livres'] = $livreModel->findAll();
-        return view('admin/livres_list', $data);
+        return view('admin/livres', $data);
     }
 
     public function ajouterLivre()
@@ -61,7 +61,7 @@ class Admin extends BaseController
     {
         $exemplaireModel = new \App\Models\ExemplaireModel();
         $data['exemplaires'] = $exemplaireModel->findAll();
-        return view('admin/exemplaires_list', $data);
+        return view('admin/exemplaires', $data);
     }
 
     public function ajouterExemplaire()

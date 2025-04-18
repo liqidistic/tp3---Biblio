@@ -6,9 +6,9 @@ use CodeIgniter\Model;
 
 class MotCleModel extends Model
 {
-    protected $table = 'mots_cles';
-    protected $primaryKey = 'id';
-    protected $allowedFields = ['libelle'];
+    protected $table = 'motcle';
+    protected $primaryKey = 'id_motCle';
+    protected $allowedFields = ['motCle'];
 
     public function firstOrCreate($data)
     {
