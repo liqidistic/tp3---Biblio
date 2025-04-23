@@ -25,7 +25,7 @@
             <i class="fas fa-book"></i>
             <h3>Ajouter un Livre</h3>
             <p>Ajoutez un nouveau livre à la bibliothèque.</p>
-            <a href="<?= base_url('admin/ajouter_livre') ?>"><button>Ajouter</button></a>
+            <a href="<?= site_url('admin/ajouterLivre') ?>"><button>Ajouter</button></a>
         </div>
         <div class="card">
             <h3>Liste des Livres</h3>

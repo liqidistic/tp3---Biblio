@@ -1,22 +1,11 @@
 <?php
 
-namespace app\Models;
+namespace App\Models;
 
 use CodeIgniter\Model;
 
-class AuteurModel extends Model
-{
-    protected $table = 'auteurs';
-    protected $primaryKey = 'id';
-    protected $allowedFields = ['nom'];
-
-    public function firstOrCreate($data)
-    {
-        $auteur = $this->where($data)->first();
-        if ($auteur) return $auteur;
-
-        $this->insert($data);
-        $data['id'] = $this->insertID();
-        return $data;
-    }
+class AuteurModel extends Model {
+    protected $table = 'auteur';
+    protected $primaryKey = 'id_auteur';
+    protected $allowedFields = ['nom_auteur'];
 }

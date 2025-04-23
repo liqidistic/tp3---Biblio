@@ -13,3 +13,4 @@ $routes->get('/admin', 'Admin::index');
 $routes->get('/user', 'User::index');
 $routes->get('admin/livres', 'Admin::livres');
 $routes->get('/admin/dashboard','Admin::index');
+$routes->match(['get','post'],'admin/ajouterLivre','Admin::ajouterLivre');

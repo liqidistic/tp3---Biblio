@@ -1,17 +1,28 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <meta charset="UTF-8">
 <head>
-    <title>Ajouter un livre</title>
+    <meta charset="UTF-8">
+    <title>Ajouter un Livre</title>
 </head>
 <body>
-    <h1>Ajouter un livre</h1>
-    <form action="<?= base_url('admin/ajouter_livre') ?>" method="post">
-        <input type="text" name="titre" placeholder="Titre du livre" required><br>
-        <textarea name="description" placeholder="Description" required></textarea><br>
-        <input type="text" name="auteur_id" placeholder="ID de l'auteur" required><br>
-        <input type="text" name="mots_cles" placeholder="Mots-clés (séparés par des virgules)" required><br>
-        <button type="submit">Ajouter</button>
+    <h1>Ajouter un Livre</h1>
+    <form action="<?= site_url('admin/ajouterLivre') ?>" method="post">
+        <label for="code_catalogue">Code Catalogue :</label>
+        <input type="text" name="code_catalogue" required><br>
+
+        <label for="titre">Titre :</label>
+        <input type="text" name="titre" required><br>
+
+        <label for="theme">Thème :</label>
+        <input type="text" name="theme" required><br>
+
+        <label for="auteur">Nom de l’Auteur :</label>
+        <input type="text" name="auteur" required><br>
+
+        <label for="mots_cles">Mots-clés (séparés par des virgules) :</label>
+        <input type="text" name="mots_cles"><br>
+
+        <input type="submit" value="Ajouter">
     </form>
 </body>
 </html>
