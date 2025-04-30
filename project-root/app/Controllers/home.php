@@ -4,15 +4,21 @@ namespace App\Controllers;
 
 class Home extends BaseController
 {
-    public function index(): string
+    public function index()
     {
         $session = session();
-        $template =
-            view('template/head', [
-                'loggedIn' => $session->get('loggedIn'),
-                'name' => $session->get('username')
-            ]) .
-            view('template/footer');
-        return "Bienvenue sur la page d'accueil !";
+
+        if (!$session->get('loggedIn')) {
+            return view('welcome');
+        }
+
+        $data = [
+            'username' => $session->get('username'),
+            'role'     => $session->get('role')
+        ];
+
+        return view('home', $data);
     }
+
+
 }

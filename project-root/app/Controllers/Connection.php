@@ -4,31 +4,54 @@ namespace App\Controllers;
 
 class Connection extends BaseController
 {
-    public function index(): string
+    public function index()
     {
-        return view("login_form");
+        return view('login_form');
     }
 
-    public function attemptLogin() 
+    public function attemptLogin()
     {
-        $abonneModel = new \App\Models\AbonneModel();
-
         $values = $this->request->getPost(['login', 'password']);
-        if (!empty($values) && $values['login'] == APP_ADMIN_LOGIN && $values['password'] == APP_ADMIN_PASSWORD) {
-            session()->set('is_admin', true); 
-            return redirect()->to('/admin');
-            
-       } 
-        
-       $userFetched = $abonneModel->where('matricule_abonne',$this->request->getPost('login'))->first();
+        $login = trim($values['login']);
+        $password = trim($values['password']);
 
-       if($this->request->getPost('password') == $userFetched['nom_abonne']
-       ) {
-       $array = array('loggedIn' => true);
-       $this->session->set($array);
-       return redirect()->to('/user');
-       } else {
-        return "Login KO";
-       }
+        $adminModel = new \App\Models\AdministrateurModel();
+        $admin = $adminModel->where('identifiant', $login)->first();
+
+        if ($admin && password_verify($password, $admin['mot_de_passe'])) {
+            $this->loginUser(null, $admin);
+            return redirect()->to('/home');
         }
+        if (is_numeric($login)) {
+            $abonneModel = new \App\Models\AbonneModel();
+            $abonne = $abonneModel->getAbonneByMatricule($login);
+
+            if ($abonne && $abonne['nom_abonne'] === $password) {
+                $this->loginUser($abonne);
+                return redirect()->to('/home');
+            }
+        }
+        return view('login_form', ['erreur' => 'Échec de connexion : identifiants invalides.']);
+    }
+
+    private function loginUser($abonne = null, $admin = null)
+    {
+        $session = session();
+        $session->set('loggedIn', true);
+
+        if ($abonne) {
+            $session->set('username', $abonne['nom_abonne']);
+            $session->set('role', 'abonne');
+            $session->set('matricule_abonne', $abonne['matricule_abonne']);
+        } elseif ($admin) {
+            $session->set('username', $admin['identifiant']);
+            $session->set('role', 'admin');
+        }
+    }
+
+    public function logout()
+    {
+        session()->destroy();
+        return redirect()->to('/');
+    }
 }

@@ -79,5 +79,4 @@ defined('EXIT__AUTO_MIN')      || define('EXIT__AUTO_MIN', 9);      // lowest au
 defined('EXIT__AUTO_MAX')      || define('EXIT__AUTO_MAX', 125);    // highest automatically-assigned error code
 
 
-define('APP_ADMIN_LOGIN', 'administrator');
-define('APP_ADMIN_PASSWORD', 'toto');
+defined('MOT_DE_PASSE_MAITRE') || define('MOT_DE_PASSE_MAITRE', '123456789');

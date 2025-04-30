@@ -30,7 +30,7 @@ class App extends BaseConfig
      * @var list<string>
      */
     public array $allowedHostnames = [];
-
+    public $CI_ENVIRONMENT = 'development';
     /**
      * --------------------------------------------------------------------------
      * Index File

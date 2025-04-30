@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Models;
+namespace App\Models;
 
 use CodeIgniter\Model;
 
@@ -8,23 +8,19 @@ class AbonneModel extends Model
 {
     protected $table = 'abonne';
     protected $primaryKey = 'matricule_abonne';
-    protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
 
     protected $allowedFields = [
-    'matricule_abonne',
-    'nom_abonne',
-    'date_naissance_abonne',
-    'date_adhesion_abonne',
-    'adresse_abonne',
-    'CSP_abonne'
+        'matricule_abonne',
+        'nom_abonne',
+        'date_naissance_abonne',
+        'date_adhesion_abonne',
+        'adresse_abonne',
+        'telephone_abonne',
+        'csp_abonne',
     ];
 
-    protected bool $allowEmptyInsert = false;
-    protected bool $updateOnlyChanged = true;
-
-public function getAbonneByMatricule($matricule)
+    public function getAbonneByMatricule($matricule)
     {
-        return $this->where('matricule', $matricule)->first();
+        return $this->find($matricule); // Utilise la clé primaire
     }
 }
