@@ -39,7 +39,9 @@ $routes->get('abonne/exemplaires/(:segment)', 'Abonne::exemplairesDisponibles/$1
 $routes->get('abonne/emprunts/(:segment)', 'Abonne::emprunts/$1');
 $routes->post('abonne/emprunts/(:segment)', 'Abonne::emprunts/$1');
 // Route pour afficher la page de demande d'un livre
-$routes->get('abonne/livre_disponible/(:segment)', 'Abonne::demander/$1');
+$routes->get('abonne/livres_disponibles/(:segment)', 'Abonne::demander/$1');
+$routes->get('livres_disponibles', 'LivreController::livresDisponibles');
+
 
 $routes->match(['GET', 'POST'], 'abonne/demander/(:segment)', 'Abonne::demander/$1');
 $routes->get('/mes_demandes', 'Abonne::mesDemandes');
@@ -51,6 +53,8 @@ $routes->post('/reserver/(:segment)', 'Abonne::reserver/$1');
 // ROUTES GENERALES
 // ===============================
 $routes->get('livre/(:any)', 'Livre::voir/$1');
+$routes->get('livres/disponibles', 'LivreController::livresDisponibles');
+
 
 // ===============================
 // ROUTES ADMIN DEMANDES
@@ -61,11 +65,13 @@ $routes->get('/admin/supprimer_demande/(:num)', 'DemandeAdminController::supprim
 // ===============================
 // ROUTES DEMANDE (UTILISATEUR)
 // ===============================
+$routes->get('creer_demande/(:segment)', 'DemandeController::creer/$1');
 $routes->get('/creer_demande', 'DemandeController::creer');
 $routes->post('/creer_demande', 'DemandeController::creer');
 $routes->get('/mes_demandes', 'DemandeController::mesDemandes');
 $routes->get('/supprimer_demande/(:num)', 'DemandeController::supprimer/$1');
 $routes->get('/valider_demande/(:segment)', 'DemandeController::valider/$1');
+$routes->get('creer_demande/(:segment)', 'DemandeController::validerDemande/$1');
 
 // ===============================
 // ROUTES ADMIN EXEMPLAIRES

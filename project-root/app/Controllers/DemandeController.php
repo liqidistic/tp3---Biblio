@@ -100,5 +100,34 @@ public function supprimerDemande($codeCatalogue)
         return redirect()->to('/mes_demandes')->with('error', 'Erreur lors de la suppression de la demande.');
     }
 }
+public function validerDemande($code_catalogue)
+{
+    $db = \Config\Database::connect();
+
+    // Optionnel : vérifier que l'exemplaire est toujours disponible
+    $exemplaire = $db->query("SELECT * FROM exemplaire WHERE code_catalogue = ? AND disponibilite = 1", [$code_catalogue])->getRow();
+
+    if (!$exemplaire) {
+        return redirect()->to('/livres_disponibles')->with('error', 'Livre indisponible ou introuvable.');
+    }
+
+    // Exemple : utilisateur connecté via session
+    $id_abonne = session()->get('id_abonne'); // à adapter selon ton système
+
+    if (!$id_abonne) {
+        return redirect()->to('/login')->with('error', 'Vous devez être connecté.');
+    }
+
+    // Insérer une ligne dans la table `demande` (à adapter selon ta structure)
+    $builder = $db->table('demande');
+    $builder->insert([
+        'code_catalogue' => $code_catalogue,
+        'id_abonne'      => $id_abonne,
+        'date_demande'   => date('Y-m-d'),
+        'etat'           => 'En attente'
+    ]);
+
+    return redirect()->to('/livres_disponibles')->with('success', 'Demande enregistrée avec succès.');
+}
 
 }
