@@ -46,7 +46,7 @@ class Admin extends BaseController
         $livreModel = new LivreModel();
         $data['livres'] = $livreModel->findAll();
 
-        return view('admin/livres', $data);
+        return redirect()->to('/livres_disponibles')->with('success', 'Livre ajouté avec succès.');
     }
 
     public function ajouterLivre()
@@ -72,7 +72,7 @@ class Admin extends BaseController
             }
 
             // succès → redirection
-            return redirect()->to('/admin/livres')
+            return redirect()->to('/admin/livres_disponibles')
                              ->with('success','Livre ajouté !');
         }
 

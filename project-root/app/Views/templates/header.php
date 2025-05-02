@@ -15,7 +15,7 @@
         <a href="/">&#x1F3E1; Accueil</a>
         <?php if (session()->get('loggedIn')): ?>
             <?php if (session()->get('role') === 'admin'): ?>
-                | <a href="/admin/livres">&#x1F4DA; Gérer les livres</a>
+                | <a href="/livres_disponibles">&#x1F4DA; Liste des livres</a>
                 | <a href="/admin/abonnes/ajouter">&#x1F464; Ajouter un abonné</a>
                 | <a href="/admin/creer">&#x1F46E; Créer admin</a>
                 |<a href="/admin/demande_gestion">&#x1F46E; Gestion des demandes</a>

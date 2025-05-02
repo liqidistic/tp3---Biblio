@@ -10,9 +10,10 @@
                 <p>Tu es connecté en tant qu'<strong>Administrateur</strong>.</p>
 
                 <div class="btn-group">
-                    <a href="<?= site_url('/admin/livres') ?>" class="btn btn-primary">Gérer les livres</a>
-                    <a href="<?= site_url('/admin/exemplaires/ajouter') ?>" class="btn btn-primary">Ajouter un exemplaire</a>
+                    <a href="<?= site_url('/admin/ajouter_livre') ?>" class="btn btn-primary">Ajouter un livre</a>
+                    <a href="<?= site_url('/admin/ajouter_exemplaire') ?>" class="btn btn-primary">Ajouter un exemplaire</a>
                     <a href="<?= site_url('/admin/abonnes/ajouter') ?>" class="btn btn-primary">Ajouter un abonné</a>
+                    
                 </div>
             </div>
         

@@ -13,10 +13,14 @@ class ExemplaireModel extends Model
     /**
      * Récupère tous les exemplaires sauf ceux dégradés
      */
-    public function getExemplairesDisponibles()
-    {
-        return $this->where('etat_exemplaire !=', 'DEGRADE')->findAll();
-    }
+   public function afficherFormulaireExemplaire()
+{
+    $db = \Config\Database::connect();
+    $livres = $db->table('livre')->get()->getResultArray();
+
+    return view('admin/ajouter_exemplaire', ['livres' => $livres]);
+}
+
 
     /**
      * Récupère les exemplaires d'un livre spécifique (sauf dégradés)
