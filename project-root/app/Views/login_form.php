@@ -1,21 +1,27 @@
-<?= $this->extend('template/head') ?>
-<?= $this->section('content') ?>
+<?= view('templates/header', ['title' => 'Connexion']) ?>
 
-<body>
-    </div>
-    <div class="container">
-        <h1>Se connecter</h1>
-        <form method="POST" action="/login">
-            <label for="login">Matricule abonné / Identifiant admin</label>
-            <input id="login" name="login" type="text" />
+<section class="tech info-box login-card">
+    <h2>Connexion</h2>
 
-            <label for="password">Nom abonné / Mot de passe admin</label>
-            <input id="password" name="password" type="password" />
+    <?php if (session()->getFlashdata('error')): ?>
+        <div class="alert">
+            <?= session()->getFlashdata('error') ?>
+        </div>
+    <?php endif; ?>
 
-            <button type="submit">Se connecter</button>
-        </form>
-    </div>
-</body>
-</html>
+    <form method="POST" action="<?= site_url('login') ?>">
+        <div class="form-group">
+            <label for="login">Identifiant</label>
+            <input type="text" placeholder="Ton numÃ©ro de matricule" name="login" id="login" required>
+        </div>
 
-<?= $this->endSection() ?>
+        <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Se connecter</button>
+    </form>
+</section>
+
+<?= view('templates/footer') ?>
