@@ -12,7 +12,7 @@
     <form method="POST" action="<?= site_url('login') ?>">
         <div class="form-group">
             <label for="login">Identifiant</label>
-            <input type="text" placeholder="Ton numÃ©ro de matricule" name="login" id="login" required>
+            <input type="text" placeholder="Ton numéro de matricule" name="login" id="login" required>
         </div>
 
         <div class="form-group">
