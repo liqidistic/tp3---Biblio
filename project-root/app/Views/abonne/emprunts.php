@@ -18,28 +18,40 @@
     <p>Tu n’as aucun emprunt en cours.</p>
 <?php else: ?>
     <table class="styled-table">
-        <tr>
-            <th>Titre</th>
-            <th>Exemplaire</th>
-            <th>Date d'emprunt</th>
-            <th>Actions</th>
-        </tr>
-        <?php foreach ($emprunts as $e): ?>
+        <thead>
             <tr>
-                <td><?= esc($e['titre_livre']) ?></td>
-                <td><?= esc($e['cote_exemplaire']) ?></td>
-                <td><?= esc($e['date_emprunt']) ?></td>
-                <td>
-                    <?php if (!$e['estRenouvele']): ?>
-                        <a href="/abonne/renouveler/<?= $e['cote_exemplaire'] ?>">Renouveler</a>
-                    <?php else: ?>
-                        <span style="color: gray;">Déjà renouvelé</span>
-                    <?php endif; ?>
-                    |
-                    <a href="/abonne/retourner/<?= $e['cote_exemplaire'] ?>" class="btn">Retourner</a>
-                </td>
+                <th>Titre</th>
+                <th>Exemplaire</th>
+                <th>Date d'emprunt</th>
+                <th>Date de retour</th>
+                <th>Actions</th>
             </tr>
-        <?php endforeach; ?>
+        </thead>
+        <tbody>
+            <?php foreach ($emprunts as $e): ?>
+                <tr>
+                    <td><?= esc($e['titre_livre']) ?></td>
+                    <td><?= esc($e['cote_exemplaire']) ?></td>
+                    <td><?= esc($e['date_emprunt']) ?></td>
+                    <td><?= esc($e['date_retour'] ?? '—') ?></td>
+                    <td>
+                        <div class="btn-group">
+                        <?php if (!$e['estRenouvele']): ?>
+                    <form method="POST" action="/abonne/renouveler/<?= esc($e['cote_exemplaire']) ?>" style="display:inline">
+                    <?= csrf_field() ?>
+                    <button type="submit" class="btn btn-secondary">Renouveler</button>
+                    </form>
+                    <?php else: ?>
+                        <span class="btn btn-secondary" style="opacity: 0.6; cursor: not-allowed;">
+                                Déjà renouvelé
+                        </span>
+                    <?php endif; ?>
+
+                        </div>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
     </table>
 <?php endif; ?>
 

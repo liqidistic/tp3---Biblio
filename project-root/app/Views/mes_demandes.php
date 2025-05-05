@@ -12,30 +12,30 @@
 
         <?php if (!empty($demandes)): ?>
             <table class="styled-table">
-                <thead>
-                    <tr>
-                        <th>Livre</th>
-                        <th>Date de demande</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($demandes as $demande): ?>
-                        <tr>
-                            <td><?= esc($demande['code_catalogue']) ?></td>
-                            <td><?= esc($demande['date_demande']) ?></td>
-                            
-                            <td>
-                               <!-- Formulaire pour supprimer la demande -->
-                               <form method="POST" action="<?= site_url('/supprimer-demande/'.$demande['code_catalogue']) ?>" style="display:inline;">
-                                    <?= csrf_field() ?>  <!-- CSRF pour la sécurité -->
-                                    <button type="submit" class="btn btn-danger">Supprimer</button>
-                               </form>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+    <thead>
+        <tr>
+            <th>Exemplaire</th>
+            <th>Titre du livre</th>
+            <th>Date de la demande</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($demandes as $d): ?>
+            <tr>
+                <td><?= esc($d['cote_exemplaire']) ?></td>
+                <td><?= esc($d['titre_livre'] ?? 'Titre inconnu') ?></td>
+                <td><?= esc($d['date_demande']) ?></td>
+                <td>
+                    <form action="<?= base_url('/supprimer-demande/' . $d['cote_exemplaire']) ?>" method="POST">
+                        <?= csrf_field() ?>
+                        <button class="btn btn-secondary">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
         <?php else: ?>
             <p>Vous n'avez pas encore de demandes.</p>
         <?php endif; ?>

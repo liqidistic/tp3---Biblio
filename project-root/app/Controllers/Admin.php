@@ -46,7 +46,7 @@ class Admin extends BaseController
         $livreModel = new LivreModel();
         $data['livres'] = $livreModel->findAll();
 
-        return redirect()->to('/livres_disponibles')->with('success', 'Livre ajouté avec succès.');
+        return view('admin/livres', $data);
     }
 
     public function ajouterLivre()
@@ -72,7 +72,7 @@ class Admin extends BaseController
             }
 
             // succès → redirection
-            return redirect()->to('/admin/livres_disponibles')
+            return redirect()->to('/admin/livres')
                              ->with('success','Livre ajouté !');
         }
 
@@ -193,17 +193,20 @@ public function retourLivre($matricule, $cote)
 }
 
 public function gestionDemandes()
-    {
-        helper('url');
-        $demModel = new DemandeModel();
+{
+    $db = \Config\Database::connect();
 
-        $data['demandes'] = $demModel
-            ->orderBy('code_catalogue','ASC')
-            ->orderBy('date_demande','ASC')
-            ->findAll();
+    $demandes = $db->table('demande')
+        ->select('demande.*, livre.titre_livre')
+        ->join('exemplaire', 'exemplaire.cote_exemplaire = demande.cote_exemplaire')
+        ->join('livre', 'livre.code_catalogue = exemplaire.code_catalogue')
+        ->orderBy('date_demande', 'DESC')
+        ->get()
+        ->getResultArray();
 
-        return view('admin/demandes_gestion', $data);
-    }
+    return view('admin/demandes_gestion', ['demandes' => $demandes]);
+}
+
 
     public function supprimerDemande($matricule, $code)
     {
@@ -212,10 +215,47 @@ public function gestionDemandes()
 
         $demModel
             ->where('matricule_abonne',$matricule)
-            ->where('code_catalogue',  $code)
+            ->where('cote_exemplaire',  $code)
             ->delete();
 
         return redirect()->to('/admin/demandes')
                          ->with('success','Demande supprimée.');
     }
+    public function validerDemande($matricule_abonne, $cote_exemplaire)
+{
+    $db = \Config\Database::connect();
+
+    // Vérifie que la demande existe
+    $demande = $db->table('demande')->getWhere([
+        'matricule_abonne' => $matricule_abonne,
+        'cote_exemplaire' => $cote_exemplaire
+    ])->getRow();
+
+    if (!$demande) {
+        return redirect()->back()->with('error', 'Demande introuvable.');
+    }
+
+    // Calcul des dates
+    $date_emprunt = date('Y-m-d');
+    $date_retour = date('Y-m-d', strtotime('+1 month'));
+
+    // Insère dans la table emprunte
+    $db->table('emprunte')->insert([
+        'matricule_abonne' => $matricule_abonne,
+        'cote_exemplaire' => $cote_exemplaire,
+        'date_emprunt' => $date_emprunt,
+        'date_retour' => $date_retour,
+        'estrenouvele' => 1
+    ]);
+
+    // Supprime la demande validée
+    $db->table('demande')->where([
+        'matricule_abonne' => $matricule_abonne,
+        'cote_exemplaire' => $cote_exemplaire
+    ])->delete();
+
+    return redirect()->back()->with('success', 'Demande validée. Emprunt enregistré avec date de retour prévue.');
 }
+
+}
+

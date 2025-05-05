@@ -197,75 +197,43 @@ class Abonne extends BaseController
                          ->with('success', 'Demande annulée.');
     }
 
-    /**
-     * Retourne un exemplaire emprunté
-     */
-    public function retourner(string $cote_exemplaire)
-    {
-        helper(['url']);
-        $session   = session();
-        if (! $session->get('loggedIn') || $session->get('role') !== 'abonne') {
-            return redirect()->to('/login');
-        }
-
-        $model     = new EmprunteModel();
-        $matricule = $session->get('matricule_abonne');
-
-        $emprunt = $model
-            ->where('matricule_abonne', $matricule)
-            ->where('cote_exemplaire', $cote_exemplaire)
-            ->where('date_retour', null)
-            ->first();
-
-        if ($emprunt) {
-            $model->where([
-                'matricule_abonne' => $matricule,
-                'cote_exemplaire'  => $cote_exemplaire,
-                'date_emprunt'     => $emprunt['date_emprunt']
-            ])->set('date_retour', date('Y-m-d'))->update();
-        }
-
-        return redirect()->to('/abonne/emprunts');
-    }
 
     /**
      * Renouvelle un emprunt
      */
-    public function renouveler(string $cote_exemplaire)
+    public function renouveler($cote_exemplaire)
     {
-        helper(['url']);
-        $session   = session();
-        if (! $session->get('loggedIn') || $session->get('role') !== 'abonne') {
-            return redirect()->to('/login');
+        $db = \Config\Database::connect();
+    
+        // Récupérer l'emprunt existant
+        $emprunt = $db->table('emprunte')
+                      ->where('cote_exemplaire', $cote_exemplaire)
+                      ->where('matricule_abonne', session()->get('matricule'))
+                      ->get()
+                      ->getRow();
+    
+        if (!$emprunt) {
+            return redirect()->back()->with('error', 'Emprunt introuvable.');
         }
-
-        $model      = new EmprunteModel();
-        $matricule  = $session->get('matricule_abonne');
-
-        $emprunt = $model
-            ->where('matricule_abonne', $matricule)
-            ->where('cote_exemplaire', $cote_exemplaire)
-            ->where('date_retour', null)
-            ->first();
-
-        if (! $emprunt) {
-            session()->setFlashdata('error', 'Aucun emprunt en cours.');
-            return redirect()->to('/abonne/emprunts');
+    
+        if ($emprunt->estrenouvelle) {
+            return redirect()->back()->with('error', 'Le livre a déjà été renouvelé.');
         }
-
-        if ($emprunt['estrenouvele']) {
-            session()->setFlashdata('error', 'Déjà renouvelé.');
-            return redirect()->to('/abonne/emprunts');
-        }
-
-        $model->where([
-            'matricule_abonne' => $matricule,
-            'cote_exemplaire'  => $cote_exemplaire,
-            'date_emprunt'     => $emprunt['date_emprunt']
-        ])->set('estrenouvele', true)->update();
-
-        session()->setFlashdata('success', 'Emprunt renouvelé !');
-        return redirect()->to('/abonne/emprunts');
+    
+        // Ajouter 1 mois à la date de retour
+        $dateRetour = new \DateTime($emprunt->date_retour);
+        $dateRetour->modify('+1 month');
+    
+        // Mise à jour
+        $db->table('emprunte')  
+           ->where('cote_exemplaire', $cote_exemplaire)
+           ->where('matricule_abonne', session()->get('matricule'))
+           ->update([
+               'date_retour' => $dateRetour->format('Y-m-d'),
+               'estrenouvele' => 1
+           ]);
+    
+        return redirect()->back()->with('success', 'Renouvellement effectué avec succès.');
     }
     public function reserver($codeCatalogue)
 {

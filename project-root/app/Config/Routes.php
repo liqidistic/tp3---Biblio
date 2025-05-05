@@ -46,10 +46,6 @@ $routes->post('/supprimer-demande/(:segment)', 'DemandeController::supprimerDema
 $routes->post('/renouveler/(:segment)', 'Abonne::renouveler/$1');
 $routes->post('/reserver/(:segment)', 'Abonne::reserver/$1');
 
-// ===============================
-// ROUTES GENERALES
-// ===============================
-$routes->get('livre/(:any)', 'Livre::voir/$1');
 
 // ===============================
 // ROUTES ADMIN DEMANDES
@@ -84,3 +80,8 @@ $routes->post('admin/livres/creer', 'LivreController::creerLivreAvecAuteur');
 $routes->get('admin/ajouter_exemplaire', 'LivreController::afficherFormulaireExemplaire');
 $routes->post('admin/exemplaires/creer', 'LivreController::creerExemplaire');
 $routes->get('admin/ajouter_exemplaire/(:segment)', 'LivreController::afficherFormulaireExemplairePourLivre/$1');
+$routes->get('livre/exemplaires/(:segment)', 'LivreController::exemplairesDisponibles/$1');
+$routes->get('demander/(:segment)', 'DemandeController::demander/$1');
+$routes->post('admin/demandes/valider/(:segment)/(:segment)', 'Admin::validerDemande/$1/$2');
+$routes->post('abonne/renouveler/(:num)', 'Abonne::renouveler/$1');
+$routes->get('/mes_demandes', 'DemandeController::mesDemandes');

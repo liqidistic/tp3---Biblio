@@ -8,21 +8,43 @@ use App\Models\LivreModel;
 class LivreController extends BaseController
 {
     public function livresDisponibles()
-    {
-        $model = new LivreModel();
-        $data['livres'] = $model->listeLivres();
+{
+    $db = \Config\Database::connect();
+    $livres = $db->table('livre')
+                 ->select('code_catalogue, titre_livre, theme_livre')
+                 ->groupBy('code_catalogue')
+                 ->get()
+                 ->getResultArray();
 
-        return view('livres_disponibles', $data);
+    return view('livres_disponibles', ['livres' => $livres]);
+}
+
+public function exemplairesDisponibles($code_catalogue)
+{
+    $db = \Config\Database::connect();
+
+    // Vérifier que le livre existe
+    $livre = $db->table('livre')->getWhere(['code_catalogue' => $code_catalogue])->getRow();
+
+    if (!$livre) {
+        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Livre non trouvé : $code_catalogue");
     }
 
-    public function afficherFormulaireAjout()
-    {
-        $db = \Config\Database::connect();
-        $auteurs = $db->table('auteur')->get()->getResultArray();
-    
-        return view('admin/ajouter_livre', ['auteurs' => $auteurs]);
-    }
-    
+    // Récupérer les exemplaires disponibles
+    $exemplaires = $db->table('exemplaire')
+        ->where('code_catalogue', $code_catalogue)
+        ->where('disponibilite', 1)
+        ->get()
+        ->getResultArray();
+
+    // Charger la bonne vue
+    return view('abonne/exemplaires_disponibles', [
+        'livre' => $livre,
+        'exemplaires' => $exemplaires
+    ]);
+}
+
+
 
 public function creerLivreAvecAuteur()
 {
@@ -117,6 +139,14 @@ public function afficherFormulaireExemplairePourLivre($code_catalogue)
     }
 
     return view('admin/ajouter_exemplaire', ['livre' => $livre]);
+}
+
+public function afficherFormulaireAjout()
+{
+    $db = \Config\Database::connect();
+    $auteurs = $db->table('auteur')->get()->getResultArray();
+
+    return view('admin/ajouter_livre', ['auteurs' => $auteurs]);
 }
 
 
