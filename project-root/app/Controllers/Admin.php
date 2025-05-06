@@ -237,7 +237,7 @@ public function gestionDemandes()
 
     // Calcul des dates
     $date_emprunt = date('Y-m-d');
-    $date_retour = date('Y-m-d', strtotime('+1 month'));
+    $date_retour = null; // Important : laisser null pour que l'abonné voie l'emprunt
 
     // Insère dans la table emprunte
     $db->table('emprunte')->insert([
@@ -245,17 +245,16 @@ public function gestionDemandes()
         'cote_exemplaire' => $cote_exemplaire,
         'date_emprunt' => $date_emprunt,
         'date_retour' => $date_retour,
-        'estrenouvele' => 1
+        'estrenouvele' => 0
     ]);
 
-    // Supprime la demande validée
+    // Supprime la demande
     $db->table('demande')->where([
         'matricule_abonne' => $matricule_abonne,
         'cote_exemplaire' => $cote_exemplaire
     ])->delete();
 
-    return redirect()->back()->with('success', 'Demande validée. Emprunt enregistré avec date de retour prévue.');
+    return redirect()->back()->with('success', 'Demande validée. Emprunt enregistré.');
 }
 
 }
-

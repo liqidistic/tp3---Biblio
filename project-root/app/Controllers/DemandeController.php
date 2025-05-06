@@ -31,7 +31,7 @@ class DemandeController extends BaseController
                                            ->first();
 
             if (!$exemplaire) {
-                return redirect()->to('/abonne/livre_disponible')->with('error', 'Aucun exemplaire disponible.');
+                return redirect()->to('/livre_disponible')->with('error', 'Aucun exemplaire disponible.');
             }
 
             $insertData = [
@@ -63,7 +63,7 @@ class DemandeController extends BaseController
 
         $demandes = $builder->get()->getResultArray();
 
-        return view('abonne/mes_demandes', ['demandes' => $demandes]);
+        return view('/mes_demandes', ['demandes' => $demandes]);
     }
 
     public function demander($cote_exemplaire)

@@ -41,7 +41,6 @@ $routes->get('abonne/emprunts/(:segment)', 'Abonne::emprunts/$1');
 $routes->post('abonne/emprunts/(:segment)', 'Abonne::emprunts/$1');
 // Route pour afficher la page de demande d'un livre
 $routes->match(['GET', 'POST'], 'abonne/demander/(:segment)', 'Abonne::demander/$1');
-$routes->get('/mes_demandes', 'Abonne::mesDemandes');
 $routes->post('/supprimer-demande/(:segment)', 'DemandeController::supprimerDemande/$1');$routes->post('/retourner/(:segment)', 'Abonne::retourner/$1');
 $routes->post('/renouveler/(:segment)', 'Abonne::renouveler/$1');
 $routes->post('/reserver/(:segment)', 'Abonne::reserver/$1');

@@ -22,28 +22,34 @@ class Abonne extends BaseController
         if (! $session->get('loggedIn') || $session->get('role') !== 'abonne') {
             return redirect()->to('/login');
         }
-
+    
         $matricule   = $session->get('matricule_abonne');
         $empModel    = new EmprunteModel();
         $exModel     = new ExemplaireModel();
         $livreModel  = new LivreModel();
-
+    
         // Récupère les emprunts actifs (date_retour IS NULL)
         $emprunts = $empModel
             ->where('matricule_abonne', $matricule)
-            ->where('date_retour', null)
+            ->where('rendu', false)
             ->findAll();
-
+    
         // Ajoute titre et état renouvellement
         foreach ($emprunts as &$e) {
-            $ex    = $exModel->find($e['cote_exemplaire']);
-            $livre = $livreModel->find($ex['code_catalogue']);
-            $e['titre_livre']   = $livre['titre_livre'] ?? 'Inconnu';
+            $ex = $exModel->where('cote_exemplaire', $e['cote_exemplaire'])->first();
+            if ($ex) {
+                $livre = $livreModel->where('code_catalogue', $ex['code_catalogue'])->first();
+                $e['titre_livre'] = $livre['titre_livre'] ?? 'Inconnu';
+            } else {
+                $e['titre_livre'] = 'Inconnu';
+            }
+    
             $e['estRenouvele'] = in_array($e['estrenouvele'], [true, 't', 1], true);
         }
-
+    
         return view('abonne/emprunts', ['emprunts' => $emprunts]);
     }
+    
 
     /**
      * Affiche les exemplaires disponibles pour un livre donné
@@ -93,36 +99,33 @@ class Abonne extends BaseController
     public function emprunter(string $cote_exemplaire)
     {
         helper(['url']);
-        $session = session();
-        if (! $session->get('loggedIn') || $session->get('role') !== 'abonne') {
-            return redirect()->to('/login');
-        }
+    $session = session();
 
-        $matricule = $session->get('matricule_abonne');
-        $today     = date('Y-m-d');
-        $empModel  = new EmprunteModel();
-
-        // Empêche doublon sur (cote_exemplaire, date_emprunt)
-        $exists = $empModel
-            ->where('cote_exemplaire', $cote_exemplaire)
-            ->where('date_emprunt', $today)
-            ->first();
-
-        if ($exists) {
-            $session->setFlashdata('error', 'Exemplaire déjà emprunté aujourd’hui.');
-        } else {
-            $empModel->insert([
-                'matricule_abonne' => $matricule,
-                'cote_exemplaire'  => $cote_exemplaire,
-                'date_emprunt'     => $today,
-                'estrenouvele'     => false,
-                'date_retour'      => null,
-            ]);
-            $session->setFlashdata('success', 'Livre emprunté !');
-        }
-
-        return redirect()->to('/abonne/emprunts');
+    if (! $session->get('loggedIn') || $session->get('role') !== 'abonne') {
+        return redirect()->to('/login');
     }
+
+    $matricule = $session->get('matricule_abonne');
+    $empModel = new EmprunteModel();
+    $exModel = new ExemplaireModel();
+    $livreModel = new LivreModel();
+
+    // Récupère les emprunts actifs (date_retour IS NULL)
+    $emprunts = $empModel
+        ->where('matricule_abonne', $matricule)
+        ->where('date_retour', null)
+        ->findAll();
+
+    // Ajoute les infos nécessaires
+    foreach ($emprunts as &$e) {
+        $ex = $exModel->find($e['cote_exemplaire']);
+        $livre = $livreModel->find($ex['code_catalogue']);
+        $e['titre_livre'] = $livre['titre_livre'] ?? 'Inconnu';
+        $e['estRenouvele'] = in_array($e['estrenouvele'], [true, 't', 1], true);
+    }
+
+    return view('abonne/emprunts', ['emprunts' => $emprunts]);
+}
 
     /**
      * Formulaire de demande d’emprunt si aucun exemplaire libre
@@ -204,11 +207,12 @@ class Abonne extends BaseController
     public function renouveler($cote_exemplaire)
     {
         $db = \Config\Database::connect();
+        $matricule = session()->get('matricule_abonne');
     
-        // Récupérer l'emprunt existant
+        // Récupérer l'emprunt concerné
         $emprunt = $db->table('emprunte')
                       ->where('cote_exemplaire', $cote_exemplaire)
-                      ->where('matricule_abonne', session()->get('matricule'))
+                      ->where('matricule_abonne', $matricule)
                       ->get()
                       ->getRow();
     
@@ -216,25 +220,26 @@ class Abonne extends BaseController
             return redirect()->back()->with('error', 'Emprunt introuvable.');
         }
     
-        if ($emprunt->estrenouvelle) {
-            return redirect()->back()->with('error', 'Le livre a déjà été renouvelé.');
+        if ($emprunt->estrenouvele) {
+            return redirect()->back()->with('error', 'Le livre a déjà été renouvelé une fois.');
         }
     
-        // Ajouter 1 mois à la date de retour
+        // Ajouter 1 mois à la date actuelle de retour
         $dateRetour = new \DateTime($emprunt->date_retour);
         $dateRetour->modify('+1 month');
     
-        // Mise à jour
-        $db->table('emprunte')  
+        // Mise à jour en base
+        $db->table('emprunte')
            ->where('cote_exemplaire', $cote_exemplaire)
-           ->where('matricule_abonne', session()->get('matricule'))
+           ->where('matricule_abonne', $matricule)
            ->update([
                'date_retour' => $dateRetour->format('Y-m-d'),
-               'estrenouvele' => 1
+               'estrenouvele' => true
            ]);
     
-        return redirect()->back()->with('success', 'Renouvellement effectué avec succès.');
+        return redirect()->back()->with('success', 'Renouvellement effectué avec succès. Un mois a été ajouté.');
     }
+    
     public function reserver($codeCatalogue)
 {
     $livreModel = new LivreModel();
