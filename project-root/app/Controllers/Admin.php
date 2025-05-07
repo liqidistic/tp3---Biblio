@@ -7,7 +7,7 @@ use App\Models\LivreModel;
 use App\Models\DemandeModel;
 
 class Admin extends BaseController
-{
+{   
     public function creer_admin()
     {
         helper(['form']);
@@ -128,69 +128,59 @@ class Admin extends BaseController
         return view('admin/ajouter_abonne');
     }
     public function abonnesEmprunts()
-{
-    helper('url');
-
-    $empruntModel = new \App\Models\EmprunteModel();
-
-    // On part de emprunte, on joint abonne, puis exemplaire, puis livre
-    $builder = $empruntModel
-    ->select(
-        'abonne.matricule_abonne,'
-      . ' abonne.nom_abonne,'
-      . ' emprunte.cote_exemplaire,'
-      . ' livre.titre_livre,'        
-      . ' emprunte.date_emprunt,'
-      . ' emprunte.date_retour'
-    )
-    ->join('abonne',    'emprunte.matricule_abonne = abonne.matricule_abonne')
-    ->join('exemplaire','emprunte.cote_exemplaire  = exemplaire.cote_exemplaire')
-    ->join('livre',     'exemplaire.code_catalogue  = livre.code_catalogue')
-    ->orderBy('abonne.nom_abonne, emprunte.date_emprunt', 'ASC')
-;
-
-    $data['emprunts'] = $builder->get()->getResultArray();
-    $data['title']    = 'Emprunts par abonné';
-
-    return view('admin/abonnes_emprunts', $data);
-}
-
-public function retourLivre($matricule, $cote)
-{
-    helper(['form','url']);
-
-    $emprunteModel   = new \App\Models\EmprunteModel();
-    $exemplaireModel = new \App\Models\ExemplaireModel();
-
-    // 1) Si on vient du formulaire (POST) : traiter le retour
-    if ($this->request->getMethod() === 'POST') {
-        // Récupère l’usure saisie et la date du jour
-        $usure      = $this->request->getPost('usure');
-        $dateRetour = date('Y-m-d');
-
-        // Met à jour la date de retour de l’emprunt
-        $emprunteModel
-            ->where('matricule_abonne', $matricule)
-            ->where('cote_exemplaire',  $cote)
-            ->set('date_retour',        $dateRetour)
-            ->update();
-
-        // Met à jour l’usure de l’exemplaire
-        $exemplaireModel->update($cote, [
-            'code_usure' => $usure
-        ]);
-
-        return redirect()
-            ->to('/admin/abonnes/emprunts')
-            ->with('success', 'Livre marqué comme rendu !');
+    {
+        helper('url');
+    
+        $empruntModel = new \App\Models\EmprunteModel();
+    
+        // On part de emprunte, on joint abonne, puis exemplaire, puis livre
+        $builder = $empruntModel
+            ->select(
+                'abonne.matricule_abonne, ' .
+                'abonne.nom_abonne, ' .
+                'emprunte.cote_exemplaire, ' .
+                'livre.titre_livre, ' .
+                'emprunte.date_emprunt, ' .
+                'emprunte.date_retour, ' .
+                'emprunte.rendu' // <- ajout de cette ligne
+            )
+            ->join('abonne',     'emprunte.matricule_abonne = abonne.matricule_abonne')
+            ->join('exemplaire', 'emprunte.cote_exemplaire  = exemplaire.cote_exemplaire')
+            ->join('livre',      'exemplaire.code_catalogue  = livre.code_catalogue')
+            ->orderBy('abonne.nom_abonne, emprunte.date_emprunt', 'ASC');
+    
+        $data['emprunts'] = $builder->get()->getResultArray();
+        $data['title']    = 'Emprunts par abonné';
+    
+        return view('admin/abonnes_emprunts', $data);
     }
+    
 
-    // 2) Sinon (GET) : afficher le formulaire de retour
-    return view('admin/retour_livre', [
-        'matricule' => $matricule,
-        'cote'      => $cote
-    ]);
+public function traiterRetour($cote_exemplaire)
+{
+    $etat = $this->request->getPost('etat_exemplaire');
+    $db = \Config\Database::connect();
+
+    // Marquer le livre comme rendu
+    $db->table('emprunte')
+       ->where('cote_exemplaire', $cote_exemplaire)
+       ->where('rendu', 0) // pour éviter de modifier un déjà rendu
+       ->update([
+           'rendu' => 1,
+           'date_retour' => date('Y-m-d')
+       ]);
+
+    // Mettre à jour l’état de l’exemplaire (disponible et nouvel état d’usure)
+    $db->table('exemplaire')
+       ->where('cote_exemplaire', $cote_exemplaire)
+       ->update([
+           'disponibilite' => true,
+           'code_usure' => $etat
+       ]);
+
+    return redirect()->to('/admin/abonnes/emprunts')->with('success', 'Livre retourné avec succès.');
 }
+
 
 public function gestionDemandes()
 {
@@ -255,6 +245,17 @@ public function gestionDemandes()
     ])->delete();
 
     return redirect()->back()->with('success', 'Demande validée. Emprunt enregistré.');
+}
+public function formRetour($cote_exemplaire)
+{
+    $exemplaireModel = new \App\Models\ExemplaireModel();
+    $exemplaire = $exemplaireModel->find($cote_exemplaire);
+
+    if (!$exemplaire) {
+        return redirect()->back()->with('error', 'Exemplaire introuvable.');
+    }
+
+    return view('admin/retour_form', ['exemplaire' => $exemplaire]);
 }
 
 }

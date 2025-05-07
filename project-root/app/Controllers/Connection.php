@@ -22,6 +22,7 @@ class Connection extends BaseController
             $this->loginUser(null, $admin);
             return redirect()->to('/home');
         }
+
         if (is_numeric($login)) {
             $abonneModel = new \App\Models\AbonneModel();
             $abonne = $abonneModel->getAbonneByMatricule($login);
@@ -31,6 +32,7 @@ class Connection extends BaseController
                 return redirect()->to('/home');
             }
         }
+
         return view('login_form', ['erreur' => 'Échec de connexion : identifiants invalides.']);
     }
 
@@ -46,6 +48,25 @@ class Connection extends BaseController
         } elseif ($admin) {
             $session->set('username', $admin['identifiant']);
             $session->set('role', 'admin');
+        }
+    }
+
+    public function home()
+    {
+        $session = session();
+
+        if (! $session->get('loggedIn')) {
+            return redirect()->to('/login');
+        }
+
+        $role = $session->get('role');
+
+        if ($role === 'admin') {
+            return redirect()->to('/');
+        } elseif ($role === 'abonne') {
+            return redirect()->to('/');
+        } else {
+            return redirect()->to('/login');
         }
     }
 

@@ -24,7 +24,6 @@ class DemandeController extends BaseController
 
             log_message('debug', 'Données reçues : code_catalogue = '.$codeCatalogue.' , matricule_abonne = '.$matriculeAbonne);
 
-            // Vérifier qu’un exemplaire est disponible
             $exemplaire = $exemplaireModel->where('code_catalogue', $codeCatalogue)
                                            ->where('etat_exemplaire !=', 'DEGRADE')
                                            ->where('disponibilite', true)
@@ -42,8 +41,7 @@ class DemandeController extends BaseController
 
             $inserted = $demandeModel->insert($insertData);
 
-
-            return redirect()->to('/mes_demandes')->with('success', 'Votre demande a été enregistrée.');
+            return redirect()->to('/abonne/mes_demandes')->with('success', 'Votre demande a été enregistrée.');
         }
 
         $livres = $livreModel->findAll();
@@ -63,7 +61,7 @@ class DemandeController extends BaseController
 
         $demandes = $builder->get()->getResultArray();
 
-        return view('/mes_demandes', ['demandes' => $demandes]);
+        return view('abonne/mes_demandes', ['demandes' => $demandes]);
     }
 
     public function demander($cote_exemplaire)
@@ -92,7 +90,7 @@ class DemandeController extends BaseController
             'date_demande' => date('Y-m-d')
         ]);
 
-        return redirect()->to('/mes_demandes')->with('success', 'Demande enregistrée avec succès.');
+        return redirect()->to('/abonne/mes_demandes')->with('success', 'Demande enregistrée avec succès.');
     }
 
     public function supprimerDemande($cote_exemplaire)
@@ -104,7 +102,7 @@ class DemandeController extends BaseController
                                 ->where('cote_exemplaire', $cote_exemplaire)
                                 ->delete();
 
-        return redirect()->to('/mes_demandes')->with(
+        return redirect()->to('/abonne/mes_demandes')->with(
             $deleted ? 'success' : 'error',
             $deleted ? 'Demande supprimée avec succès.' : 'Erreur lors de la suppression.'
         );
@@ -131,6 +129,6 @@ class DemandeController extends BaseController
             'date_demande'      => date('Y-m-d')
         ]);
 
-        return redirect()->to('/mes_demandes')->with('success', 'Demande validée.');
+        return redirect()->to('/abonne/mes_demandes')->with('success', 'Demande validée.');
     }
 }

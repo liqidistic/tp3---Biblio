@@ -29,13 +29,10 @@
                             <td><?= esc($e['date_emprunt']) ?></td>
                             <td><?= esc($e['date_retour'] ?? '—') ?></td>
                             <td>
-                                <?php if (empty($e['date_retour'])): ?>
-                                    <a href="<?= base_url("admin/retour/{$e['matricule_abonne']}/{$e['cote_exemplaire']}") ?>"
-                                       class="btn btn-primary">
-                                        Rendre
-                                    </a>
+                                <?php if ($e['rendu'] == 0): ?>
+                                    <a href="<?= site_url('/admin/retourner/'.$e['cote_exemplaire']) ?>" class="btn btn-warning">Retourner</a>
                                 <?php else: ?>
-                                    <span class="badge badge-success">✔️ Retourné</span>
+                                    ✔ Retourné
                                 <?php endif; ?>
                             </td>
                         </tr>

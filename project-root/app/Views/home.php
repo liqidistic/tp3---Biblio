@@ -24,7 +24,7 @@
 
                 <div class="btn-group">
                     <a href="<?= site_url('/abonne/emprunts') ?>" class="btn btn-primary">Voir mes emprunts</a>
-                    <a href="<?= site_url('/mes_demandes') ?>" class="btn btn-primary">Voir mes demandes</a>
+                    <a href="<?= site_url('abonne/mes_demandes') ?>" class="btn btn-primary">Voir mes demandes</a>
                     <a href="<?= site_url('/livres_disponibles') ?>" class="btn btn-primary">Voir les livres disponibles</a>
                 </div>
             </div>
