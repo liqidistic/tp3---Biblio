@@ -1,0 +1,13 @@
+Informations d'identifications
+
+
+Compte administrateur :
+
+login : cesar - mdp :  toto
+
+Compte utilisateur
+
+Matricule : 12345 - Nom utilisateur : Test
+
+
+MDP création d'un nouvel administrateur : 123456789

@@ -12,7 +12,7 @@
         <p>
             Cette application web a été conçue pour permettre aux abonnés d’une bibliothèque
             de consulter les livres disponibles, d’en emprunter, et de suivre leurs
-            emprunts en cours. L’interface est simple, intuitive, et adaptée à un usage réel.
+            emprunts en cours.
         </p>
     </section>
 
@@ -20,7 +20,6 @@
         <h2>&#x2728; Fonctionnalités proposées aux abonnés</h2>
         <ul>
             <li>&#x1F4D6; Voir les livres disponibles à l'emprunt</li>
-            <li>&#x1F4DD; Demander un livre indisponible</li>
             <li>&#x1F4CB; Suivre les emprunts en cours</li>
             <li>&#x1F4DA; Explorer le catalogue</li>
         </ul>
